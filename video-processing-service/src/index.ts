@@ -8,7 +8,7 @@ import {
   setupDirectories
 } from './storage';
 
-setupDirectories();
+setupDirectories(); 
 
 const app = express();
 app.use(express.json());
