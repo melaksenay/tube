@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <!-- TV -->
+  <rect x="50" y="50" width="200" height="150" fill="#333" />
+  <rect x="60" y="60" width="180" height="130" fill="#6cf" />
+  
+  <!-- TV Stand -->
+  <rect x="100" y="200" width="100" height="20" fill="#555" />
+  
+  <!-- Bear Body -->
+  <ellipse cx="300" cy="200" rx="70" ry="60" fill="#8B4513" />
+  
+  <!-- Bear Head -->
+  <circle cx="300" cy="120" r="40" fill="#8B4513" />
+  
+  <!-- Bear Ears -->
+  <circle cx="275" cy="90" r="15" fill="#8B4513" />
+  <circle cx="325" cy="90" r="15" fill="#8B4513" />
+  
+  <!-- Bear Snout -->
+  <ellipse cx="300" cy="130" rx="20" ry="15" fill="#A0522D" />
+  
+  <!-- Bear Eyes -->
+  <circle cx="290" cy="110" r="5" fill="#000" />
+  <circle cx="310" cy="110" r="5" fill="#000" />
+  
+  <!-- Bear Nose -->
+  <circle cx="300" cy="125" r="7" fill="#000" />
+</svg>
