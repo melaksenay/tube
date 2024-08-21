@@ -1,1 +1,1 @@
-skbidi toilet
+Watch vids from washu students :o
