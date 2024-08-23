@@ -22,17 +22,58 @@ const firestore = new Firestore();
 const storage = new Storage();
 const rawVideoBucketName = "melak-raw-videos";
 
-export const createUser = functions.auth.user().onCreate((user) => {
-  const userInfo = {
-    uid: user.uid,
-    email: user.email,
-    photoUrl: user.photoURL,
-  };
+// const admin = require('firebase-admin');
+// admin.initializeApp();
 
-  firestore.collection("users").doc(user.uid).set(userInfo);
-  logger.info(`User created: ${JSON.stringify(userInfo)}`);
-  return;
+export const validateUser = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError(
+      "unauthenticated",
+      "The function must be called while authenticated."
+    );
+  }
+
+  const user = context.auth.token;
+
+  // Validate the email domain
+  if (!user.email?.includes("@wustl.edu")) {
+    throw new functions.https.HttpsError(
+      "failed-precondition",
+      "Must be a WashU student to register."
+    );
+  }
+
+  try {
+    // Proceed with additional user setup if needed
+    const userInfo = {
+      uid: user.uid,
+      email: user.email,
+      photoUrl: user.picture, // Google photo URL
+    };
+
+    await firestore.collection("users").doc(user.uid).set(userInfo);
+
+    return {message: "User validated and setup successfully", userInfo};
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error.message;
+    } else {
+      throw new functions.https.HttpsError("internal", "unknown error");
+    }
+  }
 });
+
+// export const createUser = functions.auth.user().onCreate((user) => {
+//   const userInfo = {
+//     uid: user.uid,
+//     email: user.email,
+//     photoUrl: user.photoURL,
+//   };
+
+//   firestore.collection("users").doc(user.uid).set(userInfo);
+//   logger.info(`User created: ${JSON.stringify(userInfo)}`);
+//   return;
+// });
 
 export const generateUploadUrl = onCall({maxInstances: 1}, async (request) => {
   // Check if the user is authentication

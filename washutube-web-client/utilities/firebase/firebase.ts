@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFunctions } from "firebase/functions";
+import { getFunctions, httpsCallable } from "firebase/functions";
 // import { getAnalytics } from "firebase/analytics";
 import { getAuth, 
     signInWithPopup, 
@@ -34,9 +34,36 @@ const auth = getAuth(app);
  * Signs in the user with a Google Popup
  * @returns a promise that resolves with the user's credentials
  */
-export function signInWithGoogle() {
-    return signInWithPopup(auth, new GoogleAuthProvider());
+export async function signInWithGoogle() {
+  try {
+      // Sign in with Google
+      const result = await signInWithPopup(auth, new GoogleAuthProvider());
+      
+      // Get the user's credentials
+      const user = result.user;
+
+      // Validate the user's email domain
+      const validateGoogleUser = httpsCallable(functions, 'validateGoogleUser');
+      const response = await validateGoogleUser();
+
+      // console.log(response.data.message);
+
+      // If validation is successful, return the user's credentials
+      return result;
+  } catch (error) {
+      console.error("Error during Google Sign-In or validation:", (error as any).message);
+
+      // Sign out the user if validation fails or if there's an error
+      await signOut();
+
+      // Re-throw the error to handle it in the calling function
+      throw new Error("Sign-in failed (use a WashU email)");
+  }
 }
+
+// export function signInWithGoogle() {
+//     return signInWithPopup(auth, new GoogleAuthProvider());
+// }
 
 /**
  * Signs the current user out
